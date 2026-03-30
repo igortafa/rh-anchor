@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Training Matrix | Management</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h5>Logo Space</h5>
+        <ul id="nav">
+            <li><a href="index.html" class="activePage">Home</a></li>
+        </ul> 
+        <button class="light-button" id="exitAccountButton">Logout</button>
+    </header>
+
+    <main id="mainContent">
+        <h1>
+            <span class="redirectToOptions">Home</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            Trainings
+        </h1>
+        <div class="cardsContainer" id="cardsContainer">
+            <div class="card plusCard">
+                <i class="fa-solid fa-plus" style="color: rgb(196, 196, 196);"></i>
+            </div>
+        </div>
+    </main>
+
+    <div class="modalContainer" id="trainingModal">
+        <div class="modal">
+            <div class="modalContent">
+                <button class="closeBtn" id="closeBtn">×</button>
+                <h1 id="modalTitle">Add Training</h1>
+                <h6 id="modalSubtitle">Enter the training information below</h6>
+                </div>
+        </div>
+    </div>
+          
+    <main id="trainingContent" style="display:none">
+        <h1>
+            <span class="redirectToOptions">Home</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span class="redirectToTreinamentos">Trainings</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span class="treinamentoTitle"></span>
+        </h1>
+
+        <div class="setupOptions">
+            <div class="setupOption" id="abrirControle">
+                <i class="fa-solid fa-table-cells"></i>
+                <div style="display: flex; flex-direction: column;">
+                   <h5>Training Control</h5>
+                   <h6>View and manage employees who completed or need this training</h6> 
+                </div>
+                <icon><i class="fa-solid fa-chevron-right arrow"></i></icon>
+            </div>
+
+            <div class="setupOption" id="abrircomplianceSection">
+                <i class="fa-solid fa-location-crosshairs"></i>
+                <div style="display: flex; flex-direction: column;">
+                   <h5>Configure Requirements</h5>
+                   <h6>Set which roles are required to have this training</h6> 
+                </div>
+                <icon><i class="fa-solid fa-chevron-right arrow"></i></icon>
+            </div>
+
+            <div class="setupOption">
+                <i class="fa-solid fa-gear"></i>
+                <div style="display: flex; flex-direction: column;">
+                   <h5>Training Settings</h5>
+                   <h6>Edit name, description, validity, and icon</h6> 
+                </div>
+                <button id="abrirTreinamentoEdit" class="light-button optionButton">Configure</button>
+            </div>
+
+            <div class="setupOption">
+                <i class="fa-solid fa-trash-can"></i>
+                <div style="display: flex; flex-direction: column;">
+                   <h5>Delete Training</h5>
+                   <h6>Permanently remove this training from the system</h6>
+                </div>
+                <button id="abrirExcluirTreinamento" class="light-button optionButton">Delete</button>
+            </div>
+        </div>
+    </main>
+
+    <main id="complianceSection" style="display:none">
+        <h1>
+            <span class="redirectToOptions">Home</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span class="redirectToTreinamentos">Trainings</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span class="setorTreinamentoTitle"></span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span>Sectors</span>
+        </h1>
+        <div class="setupOptions setores"></div>
+    </main>
+
+    <main id="rolesComplianceSection" style="display:none">
+        <h1>
+            <span class="redirectToOptions">Home</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span class="redirectToTreinamentos">Trainings</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span class="cargosTreinamentoTitle"></span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span class="setoresTitle">Sectors</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span class="nomeSetorTitle"></span>
+        </h1>
+        <div class="setupOptions cargos"></div>
+    </main>
+
+    <main id="controle" style="display:none">
+        <h1>
+            <span class="redirectToOptions">Home</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span class="redirectToTreinamentos">Trainings</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span class="controleTreinamentoTitle"></span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span>Control</span>
+        </h1>
+
+        <div class="table-container">
+            <table id="controleTable">
+                <thead>
+                    <tr></tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <script src="firebase-config.js"></script>
+    <script src="app-core.js"></script> <script src="general.js"></script> <script src="training-matrix-script.js"></script> </body>
+</html>

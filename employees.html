@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h5>Logo Space</h5>
+        <ul id="nav">
+            <li><a href="index.html" class="activePage">Home</a></li>
+        </ul> 
+        <button class="light-button" id="exitAccountButton">Logout</button>
+    </header>
+
+
+    <main id="colaboradoresOptions">
+        <h1>
+            <span class="redirectToOptions">Home</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span>Employees</span>
+        </h1>
+        <div class="setupOptions">
+            <div class="setupOption" id="abrirColaboradores">
+                <i class="fa-solid fa-users"></i>
+                <div style="display: flex; flex-direction: column;">
+                   <h5>Active Employees</h5>
+                   <h6>View and edit active or on-leave employees</h6> 
+                </div>
+                <icon><i class="fa-solid fa-chevron-right arrow"></i></icon> 
+            </div> 
+
+            <div class="setupOption" id="abrirDesligados">
+                <i class="fa-solid fa-users-slash"></i>
+                <div style="display: flex; flex-direction: column;">
+                   <h5>Terminated Employees</h5>
+                   <h6>View records of former employees (offboarding)</h6> 
+                </div>
+                <icon><i class="fa-solid fa-chevron-right arrow"></i></icon> 
+            </div> 
+        </div>
+    </main>
+
+    <main id="colaboradoresAtivos" style="display: none;">
+        <div class="titleAndButton">
+            <h1>
+                <span class="redirectToOptions">Home</span>
+                <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+                <span class="redirectToColaboradores">Employees</span>
+                <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+                <span>Active</span>
+            </h1>
+            <button class="rounded-button" id="abrirAdicionarColaboradorBtn">
+                <div class="icon"><i class="fa-solid fa-plus"></i></div>
+            </button>
+        </div>
+
+        <div class="table-container">
+            <table id="ativosTable">
+                <thead>
+                    <tr></tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+
+    <div class="modalContainer" id="employeeModal">
+        <div class="modal">
+            <div class="modalContent">
+                <button class="closeBtn" id="closeBtn">×</button>
+                <h1 id="modalTitle">New Employee</h1>
+                <h6 id="modalSubtitle">Enter employee details below</h6>
+            </div>
+        </div>
+    </div>
+
+    <div class="modalContainer" id="alert"></div>
+
+    <div class="modalContainer" id="desligamentoModal">
+        <div class="modal">
+            <div class="modalContent">
+                <h1 id="modalDesligarTitle">Terminate Employee</h1>
+                <h6 id="modalSubtitle">Enter termination details</h6>
+                <form action="" id="desligarForm" class="modalForm">
+                    <div class="formItem">
+                        <label for="motivoDesligamento">Reason:</label>
+                        <select name="motivoDesligamento" required>
+                            <option value="resignation">Resignation</option>
+                            <option value="dismissal">Dismissal</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="formItem">
+                        <label for="dataDesligamento">Date:</label>
+                        <input type="date" name="dataDesligamento" required>
+                    </div>
+                    <div class="modalButtons" id="modalButtons">
+                        <button type="button" class="light-button" id="cancelar" onclick="hideItem(desligamentoModal)">Cancel</button>
+                        <button type="submit" class="dangerBtn" id="desligarBtn">Terminate</button>
+                    </div>  
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <main id="colaboradoresDesligados" style="display: none;">
+        <h1>
+            <span class="redirectToOptions">Home</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span class="redirectToColaboradores">Employees</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span>Terminated</span>
+        </h1>
+
+        <div class="table-container">
+            <table id="desligadosTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>ID / Registration</th>
+                        <th>Role</th>
+                        <th>Manager</th>
+                        <th>Hire Date</th>
+                        <th>Termination Date</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+
+    <div class="modalContainer" id="desligadoModal">
+        <div class="modal">
+            <div class="modalContentDesligados">
+                <button class="closeBtn" id="closeBtn">×</button>
+                <h1 id="modalTitle">Terminated Employee</h1>
+                <h6>View or edit former employee information</h6>
+            </div>
+        </div>
+    </div>
+
+    <div id="profile">
+        <div id="profile-content"></div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script src="firebase-config.js"></script>
+    <script src="app-core.js"></script>
+    <script src="utils.js"></script>
+    <script src="terminated-script.js"></script> <script src="employees-script.js"></script> </body>
+</html>
