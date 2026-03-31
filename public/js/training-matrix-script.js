@@ -8,16 +8,17 @@ const addTrainingBtn = document.querySelector('.plusCard');
 const body = document.querySelector('body');
 const trainingContent = document.getElementById('trainingContent');
 const complianceSection = document.getElementById('complianceSection');
+const sectorsComplianceSection = document.getElementById('sectorsComplianceSection');
 const rolesComplianceSection = document.getElementById('rolesComplianceSection');
-const openControlBtn = document.getElementById('abrirControle');
-const controlSection = document.getElementById('controle');
+const openComplianceSectionBtn = document.getElementById('openComplianceSectionBtn');
+
+
 
 // DATABASE REFERENCES
 const dbTrainings = database.ref('Users/0/configuracoes/treinamentos');
 const dbEmployees = database.ref('Users/0/colaboradores/');
 
 // UI NAVIGATION
-
 // Redirect to Matrix page
 document.querySelectorAll('.redirectToTreinamentos').forEach(el => {
     el.onclick = () => window.location.href = 'training-matrix.html';
@@ -75,18 +76,19 @@ function openTraining(key) {
     const dbCurrentTraining = database.ref(`Users/0/configuracoes/treinamentos/${key}`);
 
     // Action button listeners
-    trainingContent.querySelector('#abrirTreinamentoEdit').onclick = () => openTrainingEdit(key, dbCurrentTraining);
-    trainingContent.querySelector('#abrirExcluirTreinamento').onclick = () => openDeleteConfirm(key, dbCurrentTraining);
-    openControlBtn.onclick = () => openTrainingControl(key);
+    trainingContent.querySelector('#openTrainingEditBtn').onclick = () => openTrainingEdit(key, dbCurrentTraining);
+    trainingContent.querySelector('#openDeleteConfirmBtn').onclick = () => openDeleteConfirm(key, dbCurrentTraining);
+    openComplianceSectionBtn.onclick = () => openTrainingControl(key);
 
     dbCurrentTraining.once('value', snapshot => {
         const current = snapshot.val();
-        document.getElementById('abrircomplianceSection').onclick = () => openCompliance(current.nome, key);
-        document.querySelector('.treinamentoTitle').innerHTML = current.nome;
+
+        openRequirementsSectionBtn.onclick = () => openRequirements(current.nome, key);
+        document.querySelector('.trainingTitle').innerHTML = current.nome;
 
         hideItem(document.querySelector('main'));
         hideItem(complianceSection);
-        hideItem(controlSection);
+        hideItem(sectorsComplianceSection);
         hideItem(rolesComplianceSection);
         showFlexItem(trainingContent);
     });
@@ -94,7 +96,7 @@ function openTraining(key) {
 
 // Manage training compliance and mandatory roles
 async function openTrainingControl(key) {
-    const tableBody = document.getElementById('controleTable').querySelector('tbody');
+    const tableBody = document.getElementById('complianceSectionTable').querySelector('tbody');
     tableBody.innerHTML = '';
 
     const dbRef = database.ref(`Users/0/configuracoes/treinamentos/${key}`);
@@ -103,7 +105,8 @@ async function openTrainingControl(key) {
     const trainingSnap = await dbRef.once('value');
     const trainingData = trainingSnap.val();
     
-    const title = controlSection.querySelector('.controleTreinamentoTitle');
+    const title = complianceSection.querySelector('.complianceSectionTrainingTitle');
+    console.log(title)
     title.innerHTML = trainingData.nome;
     title.onclick = () => openTraining(key);
 
@@ -133,10 +136,10 @@ async function openTrainingControl(key) {
 
     const controlSnap = await dbControl.once('value');
     const controlList = Object.values(controlSnap.val() || {});
-    renderTable('controleTable', controlList, configControle);
+    renderTable('complianceSectionTable', controlList, configComplianceTable);
 
     hideItem(trainingContent);
-    showFlexItem(controlSection);
+    showFlexItem(complianceSection);
 }
 
 // Save new training to Firebase
@@ -197,8 +200,13 @@ function newCard(cardObject, trainingKey) {
 }
 
 // Open the modal for creating a new training
+ addTrainingBtn.onclick = e =>{
+    displayTrainingModal()
+}
 function displayTrainingModal() {
-    showFlexItem(trainingModal);
+    trainingForm.reset()
+    showFlexItem(trainingModal)
+    ;
 }
 
 // --- EDIT & COMPLIANCE LOGIC ---
@@ -207,7 +215,7 @@ function displayTrainingModal() {
 function openTrainingEdit(key, path) {
     path.once('value', snapshot => {
         const current = snapshot.val();
-        const titleEl = document.querySelector('.treinamentoTitle');
+        const titleEl = document.querySelector('.trainingTitle');
         
         titleEl.innerHTML = `${current.nome} (${current.descricao})`;
         showFlexItem(trainingModal);
@@ -247,17 +255,17 @@ trainingModal.querySelector('.closeBtn').addEventListener('click', () => {
 });
 
 // Display sectors to define training requirements
-function openCompliance(name, key) {
+function openRequirements(name, key) {
     const titleEl = document.querySelector('.setorTreinamentoTitle');
     titleEl.innerHTML = name;
     titleEl.onclick = () => openTraining(key);
 
-    const sectorsContainer = complianceSection.querySelector('.setupOptions');
+    const sectorsContainer = sectorsComplianceSection.querySelector('.sectorsContainer');
     sectorsContainer.innerHTML = '';
     
     hideItem(trainingContent);
     hideItem(rolesComplianceSection);
-    showFlexItem(complianceSection);
+    showFlexItem(sectorsComplianceSection);
 
     dbsetores.once('value', snapshot => {
         snapshot.forEach(sector => {
@@ -289,7 +297,7 @@ function openRoleSelection(name, trainingKey, sectorKey, sectorName) {
 
     document.querySelector('.cargosTreinamentoTitle').innerHTML = name;
     document.querySelector('.cargosTreinamentoTitle').onclick = () => openTraining(trainingKey);
-    document.querySelector('.setoresTitle').onclick = () => openCompliance(name, trainingKey);
+    document.querySelector('.setoresTitle').onclick = () => openRequirements(name, trainingKey);
     document.querySelector('.nomeSetorTitle').innerHTML = sectorName;
 
     const rolesContainer = document.querySelector('.cargos');
@@ -336,5 +344,6 @@ function openRoleSelection(name, trainingKey, sectorKey, sectorName) {
     });
 
     hideItem(complianceSection);
+    hideItem(sectorsComplianceSection)
     showFlexItem(rolesComplianceSection);
 }

@@ -19,7 +19,7 @@ let configColaboradores = [
 ];
 
 // Training control table columns
-let configControle = [
+let configComplianceTable = [
     { label: 'Name', key: 'name' },
     { label: 'ID', key: 'matricula' },
     { label: 'Sector', key: 'setor' },
@@ -46,10 +46,10 @@ let configDesligados = [
 
 let setoresNames = [];
 let setoresGlobal = [];
-let cargos = ['Role 1', 'Role 2'];
-let gestores = ['Manager 1', 'Manager 2'];
-let motivosDesligamento = ['Reason 1', 'Reason 2'];
-let validade = ['1 year', '2 years', '3 years', 'Modification', 'No expiration'];
+let cargos = ['','Role 1', 'Role 2'];
+let gestores = ['','Manager 1', 'Manager 2'];
+let motivosDesligamento = ['','Reason 1', 'Reason 2'];
+let validade = [ '', '1 year', '2 years', '3 years', 'Modification', 'No expiration'];
 
 // GLOBAL ICONS ARRAY
 let icones = [
@@ -73,8 +73,8 @@ let icones = [
 // FORM CONFIGURATIONS
 
 let formConfig = [
-    { label: 'Name:', type: 'input', placeholder: 'Type name...', name: 'name' },
-    { label: 'ID:', type: 'input', placeholder: 'Type registration ID...', name: 'matricula' },
+    { label: 'Name:', type: 'text', placeholder: 'Type name...', name: 'name' },
+    { label: 'ID:', type: 'text', placeholder: 'Type registration ID...', name: 'matricula' },
     { label: 'Sector:', type: 'select', placeholder: 'Select Sector', options: setoresNames, name: 'setor' },
     { label: 'Role:', type: 'select', placeholder: 'Select Role', options: cargos, name: 'cargo' },
     { label: 'Manager:', type: 'select', placeholder: 'Select Manager', options: gestores, name: 'gestor' },
@@ -83,8 +83,8 @@ let formConfig = [
 ];
 
 let formDesligadosConfig = [
-    { label: 'Name:', type: 'input', placeholder: 'Type name...', name: 'name' },
-    { label: 'ID:', type: 'input', placeholder: 'Type registration ID...', name: 'matricula' },
+    { label: 'Name:', type: 'text', placeholder: 'Type name...', name: 'name' },
+    { label: 'ID:', type: 'text', placeholder: 'Type registration ID...', name: 'matricula' },
     { label: 'Role:', type: 'select', placeholder: 'Select Role', options: cargos, name: 'cargo' },
     { label: 'Manager:', type: 'select', placeholder: 'Select Manager', options: gestores, name: 'gestor' },
     { label: 'Hire Date:', type: 'date', placeholder: 'Hire Date', name: 'admissao' },
@@ -93,9 +93,9 @@ let formDesligadosConfig = [
 ];
 
 let formTreinamentosConfig = [
-    { label: 'Name:', type: 'input', placeholder: 'Training name (ex: NR-35)...', name: 'name' },
-    { label: 'Description:', type: 'input', placeholder: 'Training description...', name: 'descricao' },
-    { label: 'Validity:', type: 'select', placeholder: 'Select Validity', options: validade, name: 'validade' },
+    { label: 'Name:', type: 'text', placeholder: 'Name', name: 'name' },
+    { label: 'Description:', type: 'text', placeholder: 'Description', name: 'descricao' },
+    { label: 'Validity:', type: 'select', placeholder: 'Validity', options: validade, name: 'validade' },
     { label: 'Icon:', type: 'icon-grid', placeholder: 'Select icon', options: icones, name: 'icones' }
 ];
 
@@ -445,10 +445,24 @@ function createFormElement(formConfig, submitEvent = () => { }) {
         form.append(formItem);
 
         switch (fieldType) {
-            case 'input':
+            case 'text':
                 {
                     currentField = document.createElement('input');
                     currentField.setAttribute('name', `${field.name}`);
+                    currentField.setAttribute('type', `${field.type}`);
+                    currentField.addEventListener('focus', e=>{
+                    currentField.classList.add('onFocusEmpty')
+            
+                    })
+                    currentField.addEventListener('focusout', e=>{
+                        if(currentField.value == ''){
+                            currentField.classList.remove('onFocusEmpty')
+                        }
+                    
+       
+                    })
+            
+
                     break;
                 }
             case 'select':
@@ -459,7 +473,20 @@ function createFormElement(formConfig, submitEvent = () => { }) {
                         currentOption.innerHTML = option;
                         currentField.append(currentOption);
                         currentField.setAttribute('name', `${field.name}`);
+                          currentField.addEventListener('focus', e=>{
+                    currentField.classList.add('onFocusEmpty')
+            
+                    })
+                    currentField.addEventListener('focusout', e=>{
+                        if(currentField.value == ''){
+                            currentField.classList.remove('onFocusEmpty')
+                        }
+                    
+       
+                    })
+                        
                     });
+                    
                     break;
                 }
             case 'date':

@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Training Matrix | Management</title>
-    <link rel="stylesheet" href="style/style.css">
+
+ <link rel="stylesheet" href="/style/style.css">   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -39,6 +40,7 @@
                 </div>
         </div>
     </div>
+    
           
     <main id="trainingContent" style="display:none">
         <h1>
@@ -46,11 +48,11 @@
             <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
             <span class="redirectToTreinamentos">Trainings</span>
             <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
-            <span class="treinamentoTitle"></span>
+            <span class="trainingTitle"></span>
         </h1>
 
         <div class="setupOptions">
-            <div class="setupOption" id="abrirControle">
+            <div class="setupOption" id="openComplianceSectionBtn">
                 <i class="fa-solid fa-table-cells"></i>
                 <div style="display: flex; flex-direction: column;">
                    <h5>Training Control</h5>
@@ -59,7 +61,7 @@
                 <icon><i class="fa-solid fa-chevron-right arrow"></i></icon>
             </div>
 
-            <div class="setupOption" id="abrircomplianceSection">
+            <div class="setupOption" id="openRequirementsSectionBtn">
                 <i class="fa-solid fa-location-crosshairs"></i>
                 <div style="display: flex; flex-direction: column;">
                    <h5>Configure Requirements</h5>
@@ -74,7 +76,7 @@
                    <h5>Training Settings</h5>
                    <h6>Edit name, description, validity, and icon</h6> 
                 </div>
-                <button id="abrirTreinamentoEdit" class="light-button optionButton">Configure</button>
+                <button id="openTrainingEditBtn" class="light-button optionButton">Configure</button>
             </div>
 
             <div class="setupOption">
@@ -83,12 +85,12 @@
                    <h5>Delete Training</h5>
                    <h6>Permanently remove this training from the system</h6>
                 </div>
-                <button id="abrirExcluirTreinamento" class="light-button optionButton">Delete</button>
+                <button id="openDeleteConfirmBtn" class="light-button optionButton">Delete</button>
             </div>
         </div>
     </main>
 
-    <main id="complianceSection" style="display:none">
+    <main id="sectorsComplianceSection" style="display:none">
         <h1>
             <span class="redirectToOptions">Home</span>
             <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
@@ -98,7 +100,7 @@
             <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
             <span>Sectors</span>
         </h1>
-        <div class="setupOptions setores"></div>
+        <div class="setupOptions sectorsContainer"></div>
     </main>
 
     <main id="rolesComplianceSection" style="display:none">
@@ -116,19 +118,19 @@
         <div class="setupOptions cargos"></div>
     </main>
 
-    <main id="controle" style="display:none">
+    <main id="complianceSection" style="display:none">
         <h1>
             <span class="redirectToOptions">Home</span>
             <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
             <span class="redirectToTreinamentos">Trainings</span>
             <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
-            <span class="controleTreinamentoTitle"></span>
+            <span class="complianceSectionTrainingTitle"></span>
             <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
             <span>Control</span>
         </h1>
 
         <div class="table-container">
-            <table id="controleTable">
+            <table id="complianceSectionTable">
                 <thead>
                     <tr></tr>
                 </thead>
@@ -141,6 +143,6 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     
-    <script src="firebase-config.js"></script>
-    <script src="app-core.js"></script> <script src="general.js"></script> <script src="training-matrix-script.js"></script> </body>
+    <script src="/js/firebase-config.js"></script>
+    <script src="/js/app-core.js"></script> <script src="/js/general.js"></script> <script src="/js/training-matrix-script.js"></script> </body>
 </html>

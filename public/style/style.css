@@ -9,12 +9,11 @@
     --secondary-color: rgb(44, 28, 85) ;
     --danger-color: rgb(166, 24, 24);
     --bg-color: rgb(255, 255, 255);
-    --bg-image: url('img/bg.png');
-    --item-bg-color: white;;
     --clean-hover: rgba(187, 187, 187, 0.321)}
 
 body{
     font-family: 'Poppins', sans-serif;
+    background-color:var(--bg-color)
 }
 
 .bgImg{
@@ -109,9 +108,7 @@ i{
     display: flex;
     align-items: center;
     justify-content: center;
-    
-    /* O segredo aqui */        /* Ou o tamanho que desejar */
-    aspect-ratio: 1 / 1;  /* Força a ser quadrado perfeito */
+    aspect-ratio: 1 / 1;  
     
     transition: transform 0.3s ease;
 }
@@ -306,17 +303,42 @@ h5{
     display: flex;
     align-items: center;
     justify-content: space-between;
+    position: relative;
+
 }
 
-.formItem select, input{
-    width: 70%;
-    height: 30px;
+.formItem label{
+position: absolute;
+left: 10px;
+z-index: 100;
+color: #707070;
+pointer-events: none;
+transition: 0.3s ease;
+
+}
+
+.formItem select, input[type='text'], input[type='textarea'], input[type='date']{
+    width: 100%;
+    height: 50px;
+    position: relative;
     box-sizing: border-box;
     border: var(--clean-border);
     text-indent: 10px;
 }
 .formItem input:focus, .formItem select:focus{
     outline: none;
+    border: 1px solid black;
+    transition: 0.3s ease;
+}
+.formItem:has(.onFocusEmpty) label {
+    background-color: #ffffff;
+    color: var(--primary-button-color);
+    transform: translateY(-15px) scale(0.8); 
+    padding: 0 5px;
+}
+
+.formItem:has(.onFocusEmpty) input {
+    border: 1px solid var(--primary-button-color);
 }
 
 .modalButtons{
@@ -862,30 +884,31 @@ h1, h3{
 
 .card{
 
-    border-radius: 14px;
+    border-radius: 0px;
     padding-top: 20px;
     padding-bottom: 20px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 0px;
+    justify-content: start;
+    align-items: start;
+    gap: 20px;
     cursor: pointer;
+
     background-color: rgb(255, 255, 255);
     animation-name: show-up;
     animation-duration: 0.2s;
     transform: scale(.9);
-    border: 1px solid rgb(221, 221, 221);
+
     
 }
 
+
 .cardsContainer{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns:   1fr 1fr 1fr;
     width: 75vw;
     overflow-y: auto;
     max-height: 74vh;
-    justify-content: center;
+    row-gap: 40px;
     margin-top: 20px;
 }
 
@@ -923,7 +946,7 @@ html::-webkit-scrollbar-thumb {
     font-weight: 400;
 }
 .card i {
-    font-size: 1.7rem;
+    font-size: 2rem;
     opacity: .9;
     margin-bottom: 4px;
     color: rgb(17, 72, 82);
@@ -945,10 +968,7 @@ html::-webkit-scrollbar-thumb {
 
 }
 
-.card:hover{
-    background-color: var(--clean-hover) ;
-    transition: 0.3s ease;
-}
+
 
 
 .modalTreinamentos{
@@ -1016,11 +1036,11 @@ html::-webkit-scrollbar-thumb {
     order: 99;
 }
 
-.redirectToOptions, .redirectToTreinamentos, .setorTreinamentoTitle, .cargosTreinamentoTitle, .setoresTitle, .redirectToColaboradores, .redirectToDesligados, .controleTreinamentoTitle{
+.redirectToOptions, .redirectToTreinamentos, .setorTreinamentoTitle, .cargosTreinamentoTitle, .setoresTitle, .redirectToColaboradores, .redirectToDesligados, .complianceSectionTrainingTitle{
     cursor: pointer;
     opacity: .7;
 }
-.redirectToOptions:hover, .redirectToTreinamentos:hover, .setorTreinamentoTitle:hover, .cargosTreinamentoTitle:hover, .setoresTitle:hover, .redirectToColaboradores:hover, .redirectToDesligados:hover, .controleTreinamentoTitle:hover{
+.redirectToOptions:hover, .redirectToTreinamentos:hover, .setorTreinamentoTitle:hover, .cargosTreinamentoTitle:hover, .setoresTitle:hover, .redirectToColaboradores:hover, .redirectToDesligados:hover, .complianceSectionTrainingTitle:hover{
     cursor: pointer;
     color: black;
     opacity: 1;
@@ -1309,3 +1329,6 @@ height: 400px;
     transition: 0.3s ease;
     background-color: rgb(244, 244, 244);
 }
+
+
+
