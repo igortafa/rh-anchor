@@ -1,5 +1,7 @@
 // --- GITIGNORE CONFIGURATION ---
 firebase-config.js
+firebase.json
+.firebaserc
 
 .DS_Store
 Thumbs.db
