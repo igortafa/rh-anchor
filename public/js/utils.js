@@ -84,12 +84,6 @@ function showUserContent(){
     window.location.href='index.html'
 }
 
-//Redirect to the authentication page
-function showAuthContainer(){
-    clearAuthForm()
-    window.location.href='auth.html'
-}
-
 
 
 

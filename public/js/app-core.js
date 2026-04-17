@@ -44,8 +44,8 @@ let configDesligados = [
     { label: 'Reason', key: 'motivoDesligamento' }
 ];
 
-let setoresNames = [];
-let setoresGlobal = [];
+let setoresNames = [''];
+let setoresGlobal = [''];
 let cargos = ['','Role 1', 'Role 2'];
 let gestores = ['','Manager 1', 'Manager 2'];
 let motivosDesligamento = ['','Reason 1', 'Reason 2'];
@@ -79,7 +79,7 @@ let formConfig = [
     { label: 'Role:', type: 'select', placeholder: 'Select Role', options: cargos, name: 'cargo' },
     { label: 'Manager:', type: 'select', placeholder: 'Select Manager', options: gestores, name: 'gestor' },
     { label: 'Hire Date:', type: 'date', placeholder: 'Hire Date', name: 'admissao' },
-    { label: 'Status:', type: 'select', placeholder: 'Select Status', options: ['Active', 'Leave'], name: 'vinculo' }
+    { label: 'Status:', type: 'select', placeholder: 'Select Status', options: ['','Active', 'Leave'], name: 'vinculo' }
 ];
 
 let formDesligadosConfig = [
@@ -196,11 +196,14 @@ function showDropdownFilter(th, dropDown, array, tableId) {
 
     let arrayDinamic = [];
     const Entries = Object.entries(filtrosAtivos);
+console.log(filtrosAtivos)
+
 
     tableRows.forEach(row => {
         let flag = true;
         const dataList = Array.from(row.children);
         for (const [col, names] of Entries) {
+            console.log(Entries)
             if (col != th.getAttribute('name')) {
                 dataList.forEach(td => {
                     if (td.getAttribute('name') == col) {
@@ -218,14 +221,34 @@ function showDropdownFilter(th, dropDown, array, tableId) {
             });
         }
     });
+  function createDateNode(obj, year, month, day){
+                obj[year] = obj[year] || {}
+                obj[year][month] =  obj[year][month] || new Set()
+                obj[year][month].add(day)
+            }
 
+    let dateObject = {}
     console.log(filtrosAtivos);
     if (th.getAttribute('name') == 'admissao') {
         const datas = arrayDinamic.map(date => {
             return new Date(date);
         });
+    
+    
+    
+        datas.forEach(date=>{
+            
+          
+
+            createDateNode(dateObject, date.getFullYear(), date.toLocaleString('pt-BR', { month: 'short' }), date.getDay())
+
+        })
+    
+    
+    
     }
 
+        console.log(dateObject)
     const arrayPossibleNames = [...new Set(arrayDinamic)];
     const arrayFiltrado = [...new Set(arrayCriterio)];
 
@@ -473,6 +496,7 @@ function createFormElement(formConfig, submitEvent = () => { }) {
                         currentOption.innerHTML = option;
                         currentField.append(currentOption);
                         currentField.setAttribute('name', `${field.name}`);
+
                           currentField.addEventListener('focus', e=>{
                     currentField.classList.add('onFocusEmpty')
             
@@ -481,9 +505,8 @@ function createFormElement(formConfig, submitEvent = () => { }) {
                         if(currentField.value == ''){
                             currentField.classList.remove('onFocusEmpty')
                         }
-                    
-       
                     })
+
                         
                     });
                     
@@ -494,6 +517,24 @@ function createFormElement(formConfig, submitEvent = () => { }) {
                     currentField = document.createElement('input');
                     currentField.setAttribute('type', 'date');
                     currentField.setAttribute('name', `${field.name}`);
+                    currentField.style.color = 'white'
+                    
+                    currentField.onchange = e =>{
+                        if(currentField.value != ''){
+                            currentField.style.color = 'black'
+                        }else{
+                            currentField.style.color = 'white'
+                        }
+                    }
+                                        currentField.addEventListener('focus', e=>{
+                    currentField.classList.add('onFocusEmpty')
+            
+                    })
+                    currentField.addEventListener('focusout', e=>{
+                        if(currentField.value == ''){
+                            currentField.classList.remove('onFocusEmpty')
+                        }
+                    })
                     break;
                 }
             case 'icon-grid':

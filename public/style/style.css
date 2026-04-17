@@ -1,16 +1,23 @@
 :root{
     --box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.1);
     --clean-border: 1px solid rgba(172, 145, 145, 0.378);
-    --gray-text: #272727;
+    --gray-text: #ffffff;
     --button-width: 100px;
     --button-height:26px;
-    --primary-button-color: rgb(60, 102, 107);
-    --header-color: rgb(30, 30, 30);
-    --secondary-color: rgb(44, 28, 85) ;
+    --primary-button-color:#020a13;
+    --header-color: rgb(2, 60, 85);
+    --second-color:#ffbb00;
+    --third-color: #ff0054;
     --danger-color: rgb(166, 24, 24);
-    --bg-color: rgb(255, 255, 255);
+    --bg-color: var(--primary-button-color);
     --clean-hover: rgba(187, 187, 187, 0.321)}
+ 
 
+@font-face {
+  font-family: 'Sondos';
+  src: url('../fonts/sondos-regular.ttf');
+}   
+    
 body{
     font-family: 'Poppins', sans-serif;
     background-color:var(--bg-color)
@@ -47,13 +54,13 @@ main{
 
 .table-container{
     width: 96vw;
-    border-radius: 4px;
+margin-top: 50px;
  overflow-y: auto;
     overflow-x: hidden;
     display: flex;
     align-items: flex-start;
     padding: 0px; 
-    box-shadow: var(--box-shadow); 
+
     max-height: 80vh;
 }
 table{
@@ -67,7 +74,7 @@ table{
 
 
 th{
-    background-color: var(--secondary-color);
+    background-color: var(--second-color);
     height: 40px;
     color: white;
     position: relative;
@@ -88,8 +95,8 @@ th i{
     cursor: pointer;
 }
 tr{
-    height: 40px;
-    background-color: var(--item-bg-color);
+    height: 55px;
+    background-color:white;
     margin: 10px;
    
 }
@@ -134,15 +141,69 @@ i{
 .rounded-button:hover{
     transform: rotate(360deg);
     transition: 0.3s ease;
-    background-color: var(--secondary-color);
+    background-color: var(--second-color);
+}
+
+
+.logo{
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+}
+
+
+
+.logo h1{
+    font-weight: 900;
+    color: white;
+}
+
+.logo h2{
+    margin: 0px;
+
+    font-family: 'Sondos';
+    letter-spacing: 20px;
+    font-size: 2rem;
+    font-weight: 100;
+}
+
+.logo img{
+    width: 50px;
+   position: absolute;
+   top: -2px;
+   left: 125px;
+   transition: .3s ease;
+
+}
+
+.logo:hover img{
+       animation: logoShake 2s;
+}
+
+@keyframes logoShake {
+    0%{
+        transform: rotateZ(0deg);
+    }
+    30%{
+        transform: rotateZ(20deg);
+    }
+    60%{
+        transform: rotateZ(-20deg);
+    }
+    100%{
+        transform:rotateZ(0deg)
+    }
 }
 
 header{
     width: 100vw;
-    height: 40px;
-    background-color: var(--header-color);
+    height: 90px;
+    background-color: var(--primary-button-color);
     color: white;
     display: flex;
+    overflow-y: hidden;
     justify-content: space-around;
     align-items: center;
 }
@@ -231,7 +292,6 @@ h5{
 .modalContainer{
     width: 100%;
     height: 100%;
-    background-color: #4545456b;
     position: absolute;
     top: 0;
     display: none;
@@ -288,6 +348,7 @@ h5{
 .modal h1{
     margin-bottom: 0px;
     margin-top: 25px;
+    color: #020a13;
     
 }
 
@@ -311,7 +372,7 @@ h5{
 position: absolute;
 left: 10px;
 z-index: 100;
-color: #707070;
+color:grey;
 pointer-events: none;
 transition: 0.3s ease;
 
@@ -333,11 +394,11 @@ transition: 0.3s ease;
 .formItem:has(.onFocusEmpty) label {
     background-color: #ffffff;
     color: var(--primary-button-color);
-    transform: translateY(-15px) scale(0.8); 
+    transform: translateY(-25px) scale(0.8); 
     padding: 0 5px;
 }
 
-.formItem:has(.onFocusEmpty) input {
+.formItem:has(.onFocusEmpty) input, .formItem:has(.onFocusEmpty) select {
     border: 1px solid var(--primary-button-color);
 }
 
@@ -390,7 +451,7 @@ transition: 0.3s ease;
 }
 
 .closeBtn:hover{
-    background-color: var(--secondary-color);
+    background-color: var(--second-color);
     color: white;
     transition: 0.3s ease;
 }
@@ -419,17 +480,22 @@ transition: 0.3s ease;
 }
 
 #exitAccountButton{
-    height: 100%;
+    height: 20px;
+    background-color: transparent;
+    border: none;
     border-radius: 0px;
     width: 50px;
+    position: absolute;
+    right: 30px;
+    font-size: 1.4rem;
 
-    background-color: var(--header-color);
+
     color: white;
     
 }
 #exitAccountButton:hover{
-    background-color: white;
-    color: black;
+    transition: 0.3s ease;
+    color: var(--third-color)
 }
 
 .small-alert{
@@ -496,6 +562,7 @@ transition: 0.3s ease;
 .configOption{
     background-color: rgba(255, 255, 255, 0);
     display: flex;
+    color: white;
     flex-direction: column;
     animation-name: show-up;
     animation-duration: 0.3s;
@@ -509,15 +576,18 @@ transition: 0.3s ease;
 .disbled{
     opacity: .2;
 }
-.configOption{
-    color: #272727;
-}
+
 
 .configOption p {
     font-size: .7rem;
     text-align: justify;
     margin:0px;
     margin-top: 10px;
+
+}
+
+.configOption i {
+color: var(--second-color);
 
 }
 
@@ -565,11 +635,12 @@ transition: 0.3s ease;
 
 }
 .kanbanColumn{
-    background-color:  rgb(19, 61, 75);
-    min-width: 300px;   
+
+    background-color:  var(--second-color);
+    min-width: 300px;  
     max-height: 70vh;
     box-shadow: var(--box-shadow);
-    border-radius: 10px;
+
     animation-name: show-up;
     position: relative;
     animation-duration: 0.1s;
@@ -598,7 +669,7 @@ gap: 10px;
     margin: 0px;
     padding: 0px;
     font-size: 1.3rem;
-    color: rgba(255, 255, 255, 0.545);
+    color: black;
 }
 
 .kanbanCardBox::-webkit-scrollbar {
@@ -641,11 +712,12 @@ gap: 10px;
 
 
 .kanbanCard{
-    background-color:  rgba(56, 123, 149, 0.524);
+    background-color: var(--primary-button-color);
     height: 30px;
-     border: 2px solid rgba(255, 255, 255, 0);
+     border: 2px solid rgba(117, 21, 21, 0);
     display: flex;
     min-width: 90%;
+    color: white!important;
     min-height: 35px;
     margin: 0px;
     position: relative;
@@ -655,9 +727,10 @@ gap: 10px;
         animation-name:show-up;
     animation-duration: 0.1s;
     border-radius: 5px;
-    box-shadow: 0px 3px 2px 0px rgba(0, 0, 0, 0.275);
+
     padding: 0px;
     cursor:pointer;
+    color: black;
 }
 .kanbanCard:hover{
   transition: 0.3s ease;
@@ -680,6 +753,7 @@ gap: 10px;
     border-radius: 6px;
     background-color: rgba(255, 255, 255, 0);
     position: relative;
+    color: black;
     height: 76vh;
     display: flex;
     align-items: flex-start;
@@ -734,6 +808,7 @@ h1, h3{
 .titleAndSubtitle p{
     margin: 0;
     color:#272727;
+    color: black;
 }
 
 #adicionarSetoresButton{
@@ -746,7 +821,7 @@ h1, h3{
     background-color: rgba(255, 255, 255, 0);
     border: none;
     width: 94%;
-    color: rgb(255, 255, 255);
+    color: black;
     border-radius: 3px;
     display: flex;
     justify-content: center;
@@ -758,6 +833,7 @@ h1, h3{
 .kanbanColumnButton:hover{
     background-color: rgba(126, 126, 126, 0.3);
     transition: 0.3s ease;
+    color: black;
     
     
 }
@@ -785,11 +861,14 @@ h1, h3{
 .kanbanColumnTitle{
     background-color: rgba(255, 255, 255, 0);
     margin-top: 10px;
+    max-width: 75%;
+    border: none!important;
+    max-height: 30px;
     margin-bottom: 10px;
     border: 2px solid rgba(255, 255, 255, 0);
     text-align: center;
     text-indent: 0; width: 70%;
-    color: #ffffff;
+
 }
 
 .kanbanColumnTitle:focus{
@@ -804,13 +883,13 @@ h1, h3{
 .kanbanCardInput{
     background-color: rgba(255, 255, 255, 0);
     outline: none;
-    border: none;
+    color: white;
+    border: none!important; 
     min-width: 100%;
     height: 100%;
     margin: 0px;
     padding: 0px;
     cursor: pointer;
-    color: white;
     font-size: 11px;
     
 
@@ -862,8 +941,7 @@ h1, h3{
 .cardMenu > button{
     background-color: purple;
     border: none;
-    border-radius: 5px;
-    height: 30px;
+  height: 30px;
     width: 150px;
     position: absolute;
     color: white;
@@ -888,12 +966,14 @@ h1, h3{
     padding-top: 20px;
     padding-bottom: 20px;
     display: flex;
-    justify-content: start;
-    align-items: start;
+    justify-content: center;
+    align-items: center;
     gap: 20px;
     cursor: pointer;
-
-    background-color: rgb(255, 255, 255);
+    flex-direction: column;
+    opacity: 1;
+    color: white;
+    background-color: rgb(11, 18, 48);
     animation-name: show-up;
     animation-duration: 0.2s;
     transform: scale(.9);
@@ -904,7 +984,7 @@ h1, h3{
 
 .cardsContainer{
     display: grid;
-    grid-template-columns:   1fr 1fr 1fr;
+    grid-template-columns:   1fr 1fr 1fr 1fr;
     width: 75vw;
     overflow-y: auto;
     max-height: 74vh;
@@ -944,14 +1024,33 @@ html::-webkit-scrollbar-thumb {
     margin:0px;
     padding: 0px;
     font-weight: 400;
+    z-index: 1;
 }
 .card i {
     font-size: 2rem;
     opacity: .9;
     margin-bottom: 4px;
-    color: rgb(17, 72, 82);
+    color: rgb(255, 255, 255);
 }
 
+.card:hover::before{
+    content:'';
+    position:absolute;
+    width: 0%;
+    height: 100%;
+    top: 0;
+    left:0;
+    background-color: var(--primary-button-color);
+    animation: slide .3s forwards;
+}
+
+@keyframes slide{
+    from{
+        width: 0%;
+    }to{
+        width: 100%;
+    }
+}
 
 .card h5{
     padding: 0px 20px;
@@ -997,7 +1096,7 @@ html::-webkit-scrollbar-thumb {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--secondary-color);
+    color: var(--second-color);
 }
 
 .icon{
@@ -1042,7 +1141,7 @@ html::-webkit-scrollbar-thumb {
 }
 .redirectToOptions:hover, .redirectToTreinamentos:hover, .setorTreinamentoTitle:hover, .cargosTreinamentoTitle:hover, .setoresTitle:hover, .redirectToColaboradores:hover, .redirectToDesligados:hover, .complianceSectionTrainingTitle:hover{
     cursor: pointer;
-    color: black;
+    color: rgb(119, 119, 119);
     opacity: 1;
     transition: 0.4s ease;
 }
@@ -1076,14 +1175,17 @@ html::-webkit-scrollbar-thumb {
     padding-bottom: 20px;
     background-color: white;
     border: 1px solid rgb(235, 232, 232);
-    border-radius: 10px;
     width: 99%;
     animation-name: unfade;
     animation-duration: 0.3s;
     position: relative;
+    cursor: pointer;
 }
+
+
 .setupOption:hover{
-    background-color: rgba(255, 255, 255, 0.335);
+    background-color: #e4e4e4;
+    transition: .3s ease;
 }
 
 .setupOption i{
@@ -1202,8 +1304,8 @@ font-size: 1rem;
     z-index: 1000;
     border: var(--clean-border);
     display: none;
-    box-shadow: var(--box-shadow);
-    border-radius: 3px;
+
+
     animation-name: dropDown;
     animation-duration: 0.2s;
     justify-content: center;
@@ -1241,7 +1343,6 @@ height: 400px;
 .checkBoxFilter input{
     width: 90%;
     height: 20px;
-    border-radius: 2px;
     border: none;
     border-bottom: var(--clean-border);
 }
@@ -1260,12 +1361,11 @@ height: 400px;
     min-height: 50%;
     overflow-y: auto ;
     border: var(--clean-border);
-    border-radius: 4px;
 }
 .dropdownCheckBoxes::-webkit-scrollbar {
     width: 8px;
     height: 8px;
-    border-radius: 10px;
+
 }
 
 .dropdownCheckBoxes::-webkit-scrollbar-thumb {
@@ -1296,7 +1396,7 @@ height: 400px;
 }
 
 .filterButton{
-    background-color: var(--secondary-color);
+    background-color: var(--second-color);
     border: none;
     border-radius: 3px;
     color: white;

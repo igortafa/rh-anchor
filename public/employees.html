@@ -4,17 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Employee Management</title>
-<link rel="stylesheet" href="/style/style.css">   
+<link rel="stylesheet" href="style/style.css">   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
-        <h5>Logo Space</h5>
-        <ul id="nav">
-            <li><a href="index.html" class="activePage">Home</a></li>
-        </ul> 
-        <button class="light-button" id="exitAccountButton">Logout</button>
+        <div class="logo">
+            <h2>Anch  r</h2>
+            <img src="img/logo-anchor.png" alt="">
+        </div>
+        <button id="exitAccountButton" class="logout-btn" title="Sair">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </button>
     </header>
 
 
@@ -138,23 +140,29 @@
     <div class="modalContainer" id="desligadoModal">
         <div class="modal">
             <div class="modalContentDesligados">
-                <button class="closeBtn" id="closeBtn">×</button>
-                <h1 id="modalTitle">Terminated Employee</h1>
+                <button class="closeBtn" id="closeBtnDesligado">×</button>
+                <h1 id="modalDesligadoTitle">Terminated Employee</h1>
                 <h6>View or edit former employee information</h6>
+                <!-- form injected dynamically by terminated-script.js -->
+                <div class="modalButtons desligado-action-btns" style="margin-top:20px; padding: 0 10%; width:80%; box-sizing:border-box;">
+                    <button class="dangerBtn" id="ativarColaboradorBtn">Reactivate</button>
+                    <button class="light-button" id="submitDesligadosChanges">Save Changes</button>
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="modalContainer" id="alertDesligados"></div>
 
     <div id="profile">
         <div id="profile-content"></div>
     </div>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
-    <script src="/js/firebase-config.js"></script>
-    <script src="/js/app-core.js"></script>
-    <script src="/js/utils.js"></script>
-    <script src="/js/terminated-script.js"></script> <script src="/js/employees-script.js"></script> </body>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/app-core.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/terminated-script.js"></script> <script src="js/employees-script.js"></script> </body>
 </html>

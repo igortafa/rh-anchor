@@ -108,6 +108,7 @@ async function openTrainingControl(key) {
     const title = complianceSection.querySelector('.complianceSectionTrainingTitle');
     console.log(title)
     title.innerHTML = trainingData.nome;
+    title
     title.onclick = () => openTraining(key);
 
     const sectors = Object.values(trainingData.complianceSection?.setores || {});

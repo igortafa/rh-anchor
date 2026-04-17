@@ -184,6 +184,3 @@ const logout = () => {
 
 exitAccountBtn.addEventListener('click', () => logout());
 
-firebase.auth().onAuthStateChanged((user) => {
-    if (!user) window.location.href = 'auth.html';
-});
