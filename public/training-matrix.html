@@ -10,12 +10,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <header>
+        <div class="logo">
+    
+            <h2>Anch  r</h2>
+            <img src="img/logo-anchor.png" alt="">
+        </div>
+
+
+    </header>
 
 
     <main id="mainContent">
-        <h1>
+        <h1 class="titleAndButton">
             <span class="redirectToOptions">Home</span>
-            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span style="font-size: 1.4rem; opacity: .7;">></span>
             Trainings
         </h1>
         <div class="cardsContainer" id="cardsContainer">
@@ -37,11 +46,11 @@
     
           
     <main id="trainingContent" style="display:none">
-        <h1>
-            <span class="redirectToOptions">Home</span>
-            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+        <h1 class="titleAndButton">
+            <span class="redirectToOptions hideOnMobile">Home</span>
+            <span style="font-size: 1.4rem;  opacity: .7;" class="hideOnMobile">></span>
             <span class="redirectToTreinamentos">Trainings</span>
-            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span style="font-size: 1.4rem;  opacity: .7;">></span>
             <span class="trainingTitle"></span>
         </h1>
 
@@ -85,45 +94,49 @@
     </main>
 
     <main id="sectorsComplianceSection" style="display:none">
-        <h1>
-            <span class="redirectToOptions">Home</span>
-            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
-            <span class="redirectToTreinamentos">Trainings</span>
-            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+        <h1 class="titleAndButton">
+            <span class="redirectToOptions hideOnMobile">Home</span>
+            <span style="font-size: 1.4rem;  opacity: .7;" class="hideOnMobile">></span>
+            <span class="redirectToTreinamentos hideOnMobile">Trainings</span>
+            <span style="font-size: 1.4rem;  opacity: .7;" class="hideOnMobile">></span>
             <span class="setorTreinamentoTitle"></span>
-            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
-            <span>Sectors</span>
+            <span style="font-size: 1.4rem;  opacity: .7;">></span>
+            <span class="navigationTitle">Sectors</span>
         </h1>
         <div class="setupOptions sectorsContainer"></div>
     </main>
 
     <main id="rolesComplianceSection" style="display:none">
-        <h1>
-            <span class="redirectToOptions">Home</span>
-            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
-            <span class="redirectToTreinamentos">Trainings</span>
-            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
-            <span class="cargosTreinamentoTitle"></span>
-            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+        <h1 class="titleAndButton">
+            <span class="redirectToOptions hideOnMobile">Home</span>
+            <span style="font-size: 1.4rem;  opacity: .7;" class="hideOnMobile">></span>
+            <span class="redirectToTreinamentos hideOnMobile">Trainings</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;" class="hideOnMobile">></span>
+            <span class="cargosTreinamentoTitle hideOnMobile"></span>
+            <span style="font-size: 1.4rem;  opacity: .7;" class="hideOnMobile">></span>
             <span class="setoresTitle">Sectors</span>
-            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <span style="font-size: 1.4rem;  opacity: .7;">></span>
             <span class="nomeSetorTitle"></span>
         </h1>
         <div class="setupOptions cargos"></div>
     </main>
 
     <main id="complianceSection" style="display:none">
-        <h1>
-            <span class="redirectToOptions">Home</span>
-            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
-            <span class="redirectToTreinamentos">Trainings</span>
-            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+        <h1 class="titleAndButton">
+            <span class="redirectToOptions hideOnMobile">Home</span>
+            <span style="font-size: 1.4rem; opacity: .7;" class="hideOnMobile">></span>
+            <span class="redirectToTreinamentos hideOnMobile">Trainings</span>
+            <span style="font-size: 1.4rem;  opacity: .7;" class="hideOnMobile">></span>
             <span class="complianceSectionTrainingTitle"></span>
-            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
-            <span>Control</span>
+            <span style="font-size: 1.4rem;  opacity: .7;">></span>
+            <span class="navigationTitle">Control</span>
         </h1>
 
         <div class="table-container">
+                    <div class="toolBar" id="activeToolBar" style="display: flex; opacity: 1;">
+                    <div id="updateTrainingsButton">Update</div>
+                <div class="count"></div>
+            </div>
             <table id="complianceSectionTable">
                 <thead>
                     <tr></tr>
@@ -131,6 +144,67 @@
                 <tbody></tbody>
             </table>
         </div>
+
+
+        <div id="updateTrainingsModal" class="modalContainer" style="display: flex;">
+            <div  class="modal">
+                <div class="modalContent" >
+                    <h1>Update Training</h1>
+
+                    
+                      <div class="searchContainer">
+                        <p>Add Employee</p>
+                        <div class="searchBarFormBox" style="width: 100%;  display: flex; justify-content: stretch;" >
+                            
+                        </div>
+                
+
+            <div class="nameList" id="updateTrainingsNameList">
+              
+            </div>
+                    </div>
+                    <div class="selectedList" style="width: 100%;">
+                        <div>
+
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+<p class="selectCount">Selected Employees List (0 selected)</p>
+                            <div class="filterBarFormBox">
+
+                            </div>
+        
+                        </div>
+
+                        <div class="emptyM hidden">
+                            <p>message</p>
+                        </div>
+                        
+                      
+
+                        <div id="selectedListNames">
+                            <p class='emptyMessage'>You haven't selected no employee yet</p>
+                        </div>
+                    </div>
+
+
+                    <div style="width: 100%;">
+                        <p style="align-self: start ; ">Training Date:</p>
+                        <div class="trainingDateFormBox">
+
+                        </div>
+                  
+                    </div>
+
+                
+<button class="light-button" id="updateTrainingButton">Update</button>
+                </div>
+
+                
+           
+        </div>
+        </div>
+      
+
     </main>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>

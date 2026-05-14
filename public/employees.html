@@ -21,7 +21,7 @@
 
 
     <main id="colaboradoresOptions">
-        <h1>
+        <h1 class="titleAndButton">
             <span class="redirectToOptions">Home</span>
             <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
             <span>Employees</span>
@@ -49,9 +49,9 @@
 
     <main id="colaboradoresAtivos" style="display: none;">
         <div class="titleAndButton">
-            <h1>
-                <span class="redirectToOptions">Home</span>
-                <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+            <h1 class="titleAndButton">
+                <span class="redirectToOptions hideOnMobile">Home</span>
+                <span style="font-size: 1.4rem; margin: 10px; opacity: .7;" class="hideOnMobile">></span>
                 <span class="redirectToColaboradores">Employees</span>
                 <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
                 <span>Active</span>
@@ -61,7 +61,15 @@
             </button>
         </div>
 
+        
         <div class="table-container">
+            <div class="toolBar" id="activeToolBar">
+                
+                <i class="fa-regular fa-square"></i>
+                <i class="fa-solid fa-trash"></i>
+                <i class="fa-solid fa-toggle-off"></i>
+                <div class="count"></div>
+            </div>
             <table id="ativosTable">
                 <thead>
                     <tr></tr>
@@ -111,9 +119,9 @@
     </div>
 
     <main id="colaboradoresDesligados" style="display: none;">
-        <h1>
-            <span class="redirectToOptions">Home</span>
-            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
+        <h1 class="titleAndButton">
+            <span class="redirectToOptions hideOnMobile">Home</span>
+            <span style="font-size: 1.4rem; margin: 10px; opacity: .7;" class="hideOnMobile">></span>
             <span class="redirectToColaboradores">Employees</span>
             <span style="font-size: 1.4rem; margin: 10px; opacity: .7;">></span>
             <span>Terminated</span>
@@ -151,6 +159,8 @@
             </div>
         </div>
     </div>
+
+
 
     <div class="modalContainer" id="alertDesligados"></div>
 

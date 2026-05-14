@@ -46,9 +46,13 @@ openDismissedBtn.onclick = () => {
 // Render active employees table
 function renderEmployees() {
     returnArrayFromDatabase(dbEmployees).then((array) => {
-        renderTable('ativosTable', array, configColaboradores);
+        renderTable('ativosTable', array, configColaboradores, ()=>{}, true);
     });
 }
+
+
+
+
 
 // Modal Toggle Functions
 const openEmployeeModal = () => showFlexItem(employeeModal);

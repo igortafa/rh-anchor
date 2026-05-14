@@ -160,7 +160,7 @@ function FiltersOnClickOut(e) {
 
 // DROPDOWN FILTER LOGIC
 
-function showDropdownFilter(th, dropDown, array, tableId) {
+function showDropdownFilter(th, dropDown, array, tableId, hasAction) {
     hideFilters();
     const rect = th.querySelector('i').getBoundingClientRect();
     dropDown.style.position = 'absolute';
@@ -325,6 +325,7 @@ console.log(filtrosAtivos)
     function filterTable() {
         const filterEntries = Object.entries(filtrosAtivos);
         tableRows.forEach(row => {
+
             let show = true;
             const dataList = Array.from(row.children);
             for (const [col, names] of filterEntries) {
@@ -417,13 +418,14 @@ console.log(filtrosAtivos)
 
 // RENDER TABLE FUNCTION
 
-function renderTable(tableId, dataArray, tableConfig, rowEvent = function () { }) {
+function renderTable(tableId, dataArray, tableConfig, rowEvent = () => {}, hasAction = false, onChangeFunction = () => {}) {
     let table = document.getElementById(tableId);
     let tableBody = table.querySelector('tbody');
     tableBody.innerHTML = '';
     let theader = table.querySelector('thead tr');
-
-    theader.innerHTML = tableConfig.map(col =>
+   
+    if(hasAction){theader.innerHTML = `<th name='action'></th>`}
+    theader.innerHTML += tableConfig.map(col =>
         `<th name=${col.key}>${col.label}<i class="fa-solid fa-caret-down showDropdown"></i></th>`
     ).join('');
 
@@ -432,14 +434,95 @@ function renderTable(tableId, dataArray, tableConfig, rowEvent = function () { }
         const dropDown = document.createElement('div');
         dropDown.classList.add('dropdown');
         table.append(dropDown);
-        th.querySelector('i').onclick = () => {
-            showDropdownFilter(th, dropDown, dataArray, tableId);
+        if(th.querySelector('i')){
+           th.querySelector('i').onclick = () => {
+            showDropdownFilter(th, dropDown, dataArray, tableId, hasAction);
+        } 
         }
+        
     });
 
+
+    let selectedRows = {}
+    let rowNumber = 0
     dataArray.forEach((item) => {
+        rowNumber+=1
         let tr = document.createElement('tr');
+        tr.setAttribute('data-number', rowNumber)
         tr.addEventListener('click', rowEvent);
+
+        
+        if(hasAction){
+            
+            let toolBar = table.parentNode.querySelector('.toolBar')
+            let actionTd = document.createElement('td')
+            actionTd.innerHTML = '<input type="checkbox">'
+            let currentTableSize = null
+            let size = 0
+         
+
+            function clearRowSelection(){
+                console.log('limpando...')
+                Array.from(tableBody.children).forEach((row)=>{
+                     row.classList.remove('selectedRow')})
+            }
+            window.onclick = clearRowSelection()
+
+   function updateTableSize(firstRender = false){
+                let table = Array.from(tableBody.children).filter((row)=>{
+                     return window.getComputedStyle(row).getPropertyValue('display') != 'none'})
+                     if(firstRender){currentTableSize = table.length+1}else{currentTableSize = table.length}
+                     console.log(table)
+            }
+            function  refreshRowSelectionDisplay(){
+                toolBar.querySelector('.count').innerHTML = `${Object.keys(selectedRows).length} of ${currentTableSize} selected`  
+            }
+         
+
+            updateTableSize(true)
+            refreshRowSelectionDisplay()
+
+    
+
+
+            
+        actionTd.addEventListener('change', (e)=>{
+
+                       function updateRowSelection(){
+                        updateTableSize()
+                     if(e.target.checked){
+                        tr.classList.add('selectedRow')
+                        selectedRows[`${tr.getAttribute('data-number')}`] = tr
+                        console.log('selected rows: ', selectedRows)
+                        size = Object.keys(selectedRows).length
+                        if(size > 0){toolBar.style.opacity = 1}else{toolBar.style.opacity = .5}
+                        refreshRowSelectionDisplay()
+                    }else{
+                        tr.classList.remove('selectedRow')
+                        console.log('deletando...')
+                        delete selectedRows[`${tr.getAttribute('data-number')}`]
+                        size = Object.keys(selectedRows).length     
+                        if(size > 0){
+                            toolBar.style.opacity = 1
+                        }else{
+                            toolBar.style.opacity = .5
+                        }
+                        refreshRowSelectionDisplay()}}
+     
+
+
+            updateRowSelection()
+            window.onclick = () =>{updateRowSelection()}
+
+
+   
+            onChangeFunction(item, tr)
+        } )
+    
+
+        tr.append(actionTd)
+        }
+      
         tableConfig.forEach((col) => {
             let td = document.createElement('td');
             let id = col.key;
@@ -451,8 +534,8 @@ function renderTable(tableId, dataArray, tableConfig, rowEvent = function () { }
     });
 }
 
-// FORM CREATION LOGIC
 
+// FORM CREATION LOGIC
 function createFormElement(formConfig, submitEvent = () => { }) {
     let form = document.createElement('form');
 
@@ -470,7 +553,11 @@ function createFormElement(formConfig, submitEvent = () => { }) {
         switch (fieldType) {
             case 'text':
                 {
-                    currentField = document.createElement('input');
+        currentField = document.createElement('input');
+                    if(field.id){
+                        currentField.setAttribute('id', `${field.id}`);
+                    }
+                    
                     currentField.setAttribute('name', `${field.name}`);
                     currentField.setAttribute('type', `${field.type}`);
                     currentField.addEventListener('focus', e=>{
@@ -515,6 +602,10 @@ function createFormElement(formConfig, submitEvent = () => { }) {
             case 'date':
                 {
                     currentField = document.createElement('input');
+                      if(field.id){
+                        currentField.setAttribute('id', field.id)
+                    }
+                    
                     currentField.setAttribute('type', 'date');
                     currentField.setAttribute('name', `${field.name}`);
                     currentField.style.color = 'white'

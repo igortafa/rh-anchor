@@ -14,6 +14,7 @@ const openComplianceSectionBtn = document.getElementById('openComplianceSectionB
 
 
 
+
 // DATABASE REFERENCES
 const dbTrainings = database.ref('Users/0/configuracoes/treinamentos');
 const dbEmployees = database.ref('Users/0/colaboradores/');
@@ -137,10 +138,13 @@ async function openTrainingControl(key) {
 
     const controlSnap = await dbControl.once('value');
     const controlList = Object.values(controlSnap.val() || {});
-    renderTable('complianceSectionTable', controlList, configComplianceTable);
+    renderTable('complianceSectionTable', controlList, configComplianceTable, ()=>{}, false);
 
     hideItem(trainingContent);
     showFlexItem(complianceSection);
+
+    updateTrainingConfig(key)
+
 }
 
 // Save new training to Firebase
@@ -344,7 +348,240 @@ function openRoleSelection(name, trainingKey, sectorKey, sectorName) {
         });
     });
 
+
+
+
+
+
+
     hideItem(complianceSection);
     hideItem(sectorsComplianceSection)
     showFlexItem(rolesComplianceSection);
+}
+
+
+// Update training functions
+
+
+function updateTrainingConfig(key){
+
+
+const searchBarConfig = [
+    {label: 'Search for an employee', type: 'text', name: 'employeeSearch', id: 'updateTrainingsSearchBar' },
+
+];
+const filterBarConfig = [
+    { label: 'Search for a selected employee', type: 'text', name: 'employeeFilter', id: 'selectedListFilter' },
+
+];
+const dateConfig = [
+    { label: 'Training Date', type: 'date', name: 'trainingDate', id: 'trainingDate' },
+
+];
+
+const selectedListNames = document.getElementById('selectedListNames')
+const updateTrainingsModal = document.getElementById('updateTrainingsModal')
+
+const selectCount = document.querySelector('.selectCount')
+
+const searchBarFormItem = createFormElement(searchBarConfig)
+const filterBarFormItem = createFormElement(filterBarConfig)
+const dateInput = createFormElement (dateConfig)
+
+const updateTrainingsSearchBar = searchBarFormItem.querySelector('input')
+const selectedListFilter = filterBarFormItem.querySelector('input')
+
+const updateTrainingsNameList = document.getElementById('updateTrainingsNameList')
+
+
+
+let employeeNames = []
+const employeeObject = {}
+const selectedEmployees = new Map()
+
+
+
+const searchBarFormBox = document.querySelector('.searchBarFormBox')
+const filterBarFormBox = document.querySelector('.filterBarFormBox')
+const trainingDateFormBox = document.querySelector('.trainingDateFormBox')
+searchBarFormBox.append(searchBarFormItem)
+filterBarFormBox.append(filterBarFormItem)
+trainingDateFormBox.append(dateInput)
+
+
+const searchBarRect = updateTrainingsSearchBar.getBoundingClientRect()
+console.log('rect: ' + searchBarRect.left)
+const searchBarBottom = `${searchBarRect.bottom}px`
+const searchBarLeft = `${searchBarRect.left}px`
+
+const searchBarWidth = window.getComputedStyle(updateTrainingsSearchBar).getPropertyValue('width')
+console.log('dimensions: ', searchBarWidth)
+
+
+   function updateNameListItem(array){
+            updateTrainingsNameList.innerHTML = ''
+            array.forEach(employee =>{
+            const nameListItem = document.createElement('div')
+            nameListItem.classList.add('nameListItem')
+            nameListItem.innerHTML = ` <p>${employee}</p>`
+            updateTrainingsNameList.append(nameListItem)
+
+            nameListItem.onclick = e =>{
+                updateTrainingsNameList.style.display = 'none'
+                selectedEmployees.set(`${employeeObject[`${employee}`].matricula}`, employeeObject[`${employee}`])
+                selectCount.innerHTML = `Selected Employees List (${selectedEmployees.size} selected)`
+                updateSelectedEmployeesList()
+            }    
+
+        })
+    }
+
+
+    
+
+function filterSelectedNames(){
+    let isEmpty = true
+
+    Array.from(selectedListNames.children).forEach(element =>{
+
+        const name = element.querySelector('p').innerHTML.toLocaleLowerCase()
+        if (selectedListFilter.value != ''){
+              if(!name.includes(selectedListFilter.value)){
+            element.style.display = 'none'
+        }else{
+            isEmpty = false
+            element.style.display = 'flex'
+
+        } 
+        }else{
+            isEmpty = false
+            element.style.display = 'flex'
+        }
+    })
+    if (isEmpty){
+        selectedListNames.classList.add('hidden')
+        document.querySelector('.emptyM').classList.remove('hidden')
+        document.querySelector('.emptyM').innerHTML = `<p class=\'emptyMessage\'>You haven\'t added "${selectedListFilter.value}" yet</p>`
+    }else{
+         selectedListNames.classList.remove('hidden')
+        document.querySelector('.emptyM').classList.add('hidden')
+    }
+
+    
+}
+
+selectedListFilter.addEventListener('keyup', e =>{
+    filterSelectedNames()
+})
+
+function filterNameList(){
+    updateTrainingsNameList.innerHTML = ''
+    const value = (updateTrainingsSearchBar.value).toLowerCase()
+    const filteredNameList = employeeNames.filter(name=>{
+       return name.toLowerCase().includes(value)
+    })
+
+    updateNameListItem(filteredNameList)
+}
+
+
+
+
+
+function updateSelectedEmployeesList(isOnSearch = false){
+
+
+            if (selectedEmployees.size == 0){
+                console.log(selectedEmployees.size)
+        selectedListNames.innerHTML = '<p class=\'emptyMessage\'>You haven\'t selected no employee yet</p>'
+        return
+    }               
+        
+    selectedListNames.innerHTML = ''
+    selectedEmployees.forEach((employee, key) =>{
+        const selectedListItem = document.createElement('div')
+        selectedListItem.classList.add('selectedListItem')
+        selectedListItem.innerHTML = `<p>${employee.name}</p>
+                                <i class="fa-solid fa-xmark"></i>`
+        selectedListNames.append(selectedListItem)
+        selectedListItem.querySelector('i').onclick = e =>{
+            selectedEmployees.delete(`${employeeObject[`${employee.name}`].matricula}`)
+            selectCount.innerHTML = `Selected Employees List (${selectedEmployees.size} selected)`
+            
+            updateSelectedEmployeesList()
+        }    
+})
+
+
+}
+
+
+
+
+updateTrainingsSearchBar.addEventListener('focus', e =>{
+    console.log('focus')
+    updateTrainingsNameList.style.left = searchBarLeft + 'px'
+    updateTrainingsNameList.style.bottom = searchBarBottom +'px'
+    updateTrainingsNameList.style.width = searchBarWidth
+
+    updateTrainingsNameList.style.display = 'flex'
+
+
+    
+
+    returnArrayFromDatabase(dbEmployees).then((array) => {
+        
+
+        const namesArray = array.map(employee =>{
+            return employee.name
+        })
+        employeeNames = []
+        array.forEach(employee =>{
+            employeeNames.push((employee.name))
+            employeeObject[`${employee.name}`] = employee
+            
+        })
+        console.log(namesArray)
+        updateNameListItem(namesArray)
+    });
+})
+
+
+
+
+updateTrainingsSearchBar.addEventListener('keyup', e =>{
+    filterNameList()
+})
+
+
+
+
+
+
+
+
+window.onclick = e =>{
+    if(e.target.classList.contains('modalContainer')){
+        if(!e.target.closest('.modal')){
+        updateTrainingsModal.style.display = 'none'
+    }
+}
+    if(e.target.closest('.modal')){
+        if((!e.target.closest('.nameList') && e.target.getAttribute('id')) != 'updateTrainingsSearchBar'){
+
+            updateTrainingsNameList.style.display = 'none'
+        }
+    }
+    }
+   
+    const updateTrainingButton = document.querySelector('#updateTrainingButton')
+    updateTrainingButton.addEventListener('click', e=>{
+        console.log(key)
+    })
+
+
+
+
+
+
 }
