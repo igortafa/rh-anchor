@@ -28,6 +28,7 @@ let configComplianceTable = [
     { label: 'Hire Date', key: 'admissao' },
     { label: 'Training Date', key: 'dataTreinamento' },
     { label: 'Expiration', key: 'dataVencimento' },
+    { label: 'Situation', key: 'situacao' },
     { label: 'Status', key: 'status' },
     { label: 'Mandatory', key: 'obrigatorio' },
     { label: 'Link', key: 'vinculo' }
@@ -50,6 +51,17 @@ let cargos = ['','Role 1', 'Role 2'];
 let gestores = ['','Manager 1', 'Manager 2'];
 let motivosDesligamento = ['','Reason 1', 'Reason 2'];
 let validade = [ '', '1 year', '2 years', '3 years', 'Modification', 'No expiration'];
+
+
+
+
+let validadeConfig = {
+    '1 year': 1,
+    '2 years': 2,
+    '3 years':3,
+    'Modification': 'Modification',
+    'No expiration': 'No expiration'
+}
 
 // GLOBAL ICONS ARRAY
 let icones = [
@@ -423,6 +435,7 @@ function renderTable(tableId, dataArray, tableConfig, rowEvent = () => {}, hasAc
     let tableBody = table.querySelector('tbody');
     tableBody.innerHTML = '';
     let theader = table.querySelector('thead tr');
+    theader.innerHTML = ''
    
     if(hasAction){theader.innerHTML = `<th name='action'></th>`}
     theader.innerHTML += tableConfig.map(col =>
@@ -712,6 +725,7 @@ function showTemporary(element, time) {
 
 function smallAlert(content, type, body) {
     let alert = document.createElement('div');
+    alert.style.zIndex = 1000
     alert.classList.add('small-alert');
     alert.classList.add(`${type}`);
     hideItem(alert);
@@ -726,4 +740,9 @@ function smallAlert(content, type, body) {
 
 function formatText(text) {
     return text.toLowerCase().replace(' ', '').replace(/[^\p{L}\p{N}\s]/gu, "").replace(' ', '');
+}
+
+function stringParaData(dataString) {
+  const [dia, mes, ano] = dataString.split('/');
+  return new Date(ano, mes - 1, dia); 
 }

@@ -11,8 +11,8 @@ const complianceSection = document.getElementById('complianceSection');
 const sectorsComplianceSection = document.getElementById('sectorsComplianceSection');
 const rolesComplianceSection = document.getElementById('rolesComplianceSection');
 const openComplianceSectionBtn = document.getElementById('openComplianceSectionBtn');
-
-
+const openUpdateButton = document.getElementById('openUpdateButton')
+const updateTrainingsModal = document.getElementById('updateTrainingsModal')
 
 
 // DATABASE REFERENCES
@@ -29,6 +29,9 @@ document.querySelectorAll('.redirectToTreinamentos').forEach(el => {
 document.querySelectorAll('.redirectToOptions').forEach(el => {
     el.onclick = () => window.location.href = 'index.html';
 });
+
+
+
 
 // FORM SETUP
 
@@ -105,31 +108,126 @@ async function openTrainingControl(key) {
 
     const trainingSnap = await dbRef.once('value');
     const trainingData = trainingSnap.val();
+
     
     const title = complianceSection.querySelector('.complianceSectionTrainingTitle');
-    console.log(title)
+
     title.innerHTML = trainingData.nome;
     title
     title.onclick = () => openTraining(key);
+
+        const currentEmployeesSnap = await dbControl.once('value');
+        const currentEmployeesKeys = Object.entries(currentEmployeesSnap.val() || {});
+        const currentEmployeesObj = {}
+
+
+       currentEmployeesKeys.forEach(([key, value]) => {currentEmployeesObj[`${key}`] = value})
+        
 
     const sectors = Object.values(trainingData.complianceSection?.setores || {});
     
     for (const sector of sectors) {
         const employeeSnap = await dbEmployees.orderByChild('setor').equalTo(sector.nome).once('value');
         const employeeArray = Object.values(employeeSnap.val() || {});
+
+        
         const mandatoryRoles = Object.keys(sector.cargos || {});
 
+        
         for (const employee of employeeArray) {
-            if (mandatoryRoles.includes(employee.cargo)) {
+            
+
+  
+            const isOnCompliance = currentEmployeesObj[`${employee.matricula}`] ? true : false;
+            const hasBeenEdited = isOnCompliance && currentEmployeesObj[`${employee.matricula}`].hasBeenEdited
+            const isMandatory = mandatoryRoles.includes(employee.cargo)
+            let isClear = false
+
+            if(isOnCompliance){
+                isClear = currentEmployeesObj[`${employee.matricula}`].dataTreinamento == 'No Date' 
+            }
+            
+
+          
+
+
+
+            if (isMandatory || isOnCompliance && !isClear) {
+
+  if (isMandatory){
+                    dbControl.child(`${employee.matricula}`).update({obrigatorio: 'Yes'})
+                }else{
+                    dbControl.child(`${employee.matricula}`).update({obrigatorio: 'Not'})
+                }
+
+
+            if(hasBeenEdited){
+
+                 
+ 
+
+const obj = currentEmployeesObj[`${employee.matricula}`]
+let validity = null
+let expired = false
+
+        
+
+                if(Number.isInteger(validadeConfig[`${trainingData.validade}`])){
+                    const today = new Date()
+
+                    const trainingDateObj = new Date(stringParaData(obj.dataTreinamento))
+                    const validityDate = new Date(trainingDateObj)
+       
+                        console.log(validityDate.toLocaleDateString())
+                        console.log(obj.dataVencimento)
+
+                    validityDate.setFullYear((trainingDateObj.getFullYear() + validadeConfig[`${trainingData.validade}`]))
+
+                    const validity = new Date(stringParaData(validityDate.toLocaleDateString()))
+                    dbControl.child(`${employee.matricula}`).update({dataVencimento:validityDate.toLocaleDateString()})
+                    
+                    if(today > validity){expired = true}
+                    console.log(`Hoje: ${today}, Vencimento: ${validity}`)
+              
+                }else{
+                    validity = validadeConfig[`${trainingData.validade}`]
+                    dbControl.child(`${employee.matricula}`).update({dataVencimento:validity})
+                }
+                
+                let updates = {}
+
+                if(expired){
+                    updates = {
+                        situacao: isMandatory?'Pending':'OK',
+                        status:'Expired'    
+                    }
+                }else{
+                    updates = {
+                        situacao:'OK',
+                        status:'OK'    
+                    }
+                }
+                dbControl.child(`${employee.matricula}`).update(updates)
+
+                
+            }else{
+
                 const statusData = {
                     dataTreinamento: 'No Date',
                     dataVencimento: 'No Date',
                     situacao: 'Pending',
                     status: 'Not Completed',
                     obrigatorio: 'Yes',
+                    hasBeenEdited: false,
                     ...employee
                 };
                 dbControl.child(employee.matricula).set(statusData);
+            }
+
+
+
+
+                
             } else {
                 dbControl.child(employee.matricula).remove();
             }
@@ -143,7 +241,7 @@ async function openTrainingControl(key) {
     hideItem(trainingContent);
     showFlexItem(complianceSection);
 
-    updateTrainingConfig(key)
+    updateTrainingConfig(key, dbControl, trainingData, currentEmployeesObj)
 
 }
 
@@ -212,6 +310,10 @@ function displayTrainingModal() {
     trainingForm.reset()
     showFlexItem(trainingModal)
     ;
+}
+
+openUpdateButton.onclick = e =>{
+    updateTrainingsModal.style.display = 'flex'
 }
 
 // --- EDIT & COMPLIANCE LOGIC ---
@@ -363,7 +465,7 @@ function openRoleSelection(name, trainingKey, sectorKey, sectorName) {
 // Update training functions
 
 
-function updateTrainingConfig(key){
+function updateTrainingConfig(key, dbControl, trainingData, currentEmployeesObj){
 
 
 const searchBarConfig = [
@@ -379,10 +481,12 @@ const dateConfig = [
 
 ];
 
+
 const selectedListNames = document.getElementById('selectedListNames')
-const updateTrainingsModal = document.getElementById('updateTrainingsModal')
+
 
 const selectCount = document.querySelector('.selectCount')
+let countNumber = 0
 
 const searchBarFormItem = createFormElement(searchBarConfig)
 const filterBarFormItem = createFormElement(filterBarConfig)
@@ -404,18 +508,32 @@ const selectedEmployees = new Map()
 const searchBarFormBox = document.querySelector('.searchBarFormBox')
 const filterBarFormBox = document.querySelector('.filterBarFormBox')
 const trainingDateFormBox = document.querySelector('.trainingDateFormBox')
+
+searchBarFormBox.innerHTML = ''
+filterBarFormBox.innerHTML = ''
+trainingDateFormBox.innerHTML = ''
+
+
 searchBarFormBox.append(searchBarFormItem)
 filterBarFormBox.append(filterBarFormItem)
 trainingDateFormBox.append(dateInput)
 
 
 const searchBarRect = updateTrainingsSearchBar.getBoundingClientRect()
-console.log('rect: ' + searchBarRect.left)
 const searchBarBottom = `${searchBarRect.bottom}px`
 const searchBarLeft = `${searchBarRect.left}px`
 
 const searchBarWidth = window.getComputedStyle(updateTrainingsSearchBar).getPropertyValue('width')
-console.log('dimensions: ', searchBarWidth)
+
+let dateValue = null
+let dateObj = null
+
+dateInput.addEventListener('change', e =>{
+    dateObj = new Date(dateInput.querySelector('input').value)
+
+
+})
+
 
 
    function updateNameListItem(array){
@@ -430,7 +548,10 @@ console.log('dimensions: ', searchBarWidth)
                 updateTrainingsNameList.style.display = 'none'
                 selectedEmployees.set(`${employeeObject[`${employee}`].matricula}`, employeeObject[`${employee}`])
                 selectCount.innerHTML = `Selected Employees List (${selectedEmployees.size} selected)`
+                countNumber = selectedEmployees.size
                 updateSelectedEmployeesList()
+                updateTrainingsSearchBar.value = ''
+                updateTrainingsSearchBar.classList.remove('onFocusEmpty')
             }    
 
         })
@@ -492,7 +613,6 @@ function updateSelectedEmployeesList(isOnSearch = false){
 
 
             if (selectedEmployees.size == 0){
-                console.log(selectedEmployees.size)
         selectedListNames.innerHTML = '<p class=\'emptyMessage\'>You haven\'t selected no employee yet</p>'
         return
     }               
@@ -507,6 +627,7 @@ function updateSelectedEmployeesList(isOnSearch = false){
         selectedListItem.querySelector('i').onclick = e =>{
             selectedEmployees.delete(`${employeeObject[`${employee.name}`].matricula}`)
             selectCount.innerHTML = `Selected Employees List (${selectedEmployees.size} selected)`
+            countNumber = selectedEmployees.size
             
             updateSelectedEmployeesList()
         }    
@@ -519,7 +640,6 @@ function updateSelectedEmployeesList(isOnSearch = false){
 
 
 updateTrainingsSearchBar.addEventListener('focus', e =>{
-    console.log('focus')
     updateTrainingsNameList.style.left = searchBarLeft + 'px'
     updateTrainingsNameList.style.bottom = searchBarBottom +'px'
     updateTrainingsNameList.style.width = searchBarWidth
@@ -541,7 +661,6 @@ updateTrainingsSearchBar.addEventListener('focus', e =>{
             employeeObject[`${employee.name}`] = employee
             
         })
-        console.log(namesArray)
         updateNameListItem(namesArray)
     });
 })
@@ -552,6 +671,9 @@ updateTrainingsSearchBar.addEventListener('focus', e =>{
 updateTrainingsSearchBar.addEventListener('keyup', e =>{
     filterNameList()
 })
+
+
+
 
 
 
@@ -574,14 +696,101 @@ window.onclick = e =>{
     }
     }
    
+
+
+
+
     const updateTrainingButton = document.querySelector('#updateTrainingButton')
-    updateTrainingButton.addEventListener('click', e=>{
-        console.log(key)
-    })
+    const changeTraining = document.getElementById('changeTraining')
+
+    
+    
 
 
 
 
 
+
+    changeTraining.addEventListener('click', e=>{
+
+
+        let option = null
+
+        if (!e.target.classList.contains('changeTrainingButton')){return}
+
+        if (e.target.innerHTML == 'Clear'){option = 'c'}else if(e.target.innerHTML == 'Update'){option = 'u'}else{return}
+
+   
+
+        if(countNumber == 0){
+             smallAlert('Select at least one employee', 'alert-danger', body);
+             return
+        }else{
+            if(dateInput.querySelector('input').value == ''){
+                smallAlert('Set the training date', 'alert-danger', body);
+                return
+            }
+        }
+
+            selectedEmployees.forEach((colab, key) =>{
+
+                const colabData = colab
+                let mandatory = ''
+
+                const isNew = currentEmployeesObj[`${colabData.matricula}`]?false:true
+
+                if (!isNew){
+                    mandatory = currentEmployeesObj[`${colabData.matricula}`].obrigatorio
+                }else{
+                    mandatory = 'Not'
+                }
+
+
+                
+
+
+                let validity = null
+                let trainingDateString = dateObj.toLocaleDateString('pt-BR')
+         
+
+                if(Number.isInteger(validadeConfig[`${trainingData.validade}`])){
+                    const validityData = new Date(dateObj)
+                    validityData.setFullYear((dateObj.getFullYear() + validadeConfig[`${trainingData.validade}`]))
+                    validity = validityData.toLocaleDateString('pt-BR')
+  
+                }else{
+                    validity = validadeConfig[`${trainingData.validade}`]
+    
+                }
+
+
+                const employeeUpdated = colabData
+               
+                if(option == 'u'){
+                    employeeUpdated.dataVencimento = validity
+                    employeeUpdated.dataTreinamento = trainingDateString
+                    employeeUpdated.hasBeenEdited =true
+                    employeeUpdated.obrigatorio = mandatory
+                }else{
+                    employeeUpdated.dataVencimento = 'No Date'
+                    employeeUpdated.dataTreinamento = 'No Date'
+                    employeeUpdated.hasBeenEdited = false
+                    employeeUpdated.obrigatorio = mandatory
+                }
+                    
+
+    
+
+                   dbControl.child(`${colabData.matricula}`).update(employeeUpdated)
+                   
+                
+            })
+
+            openTrainingControl(key)
+        })
+        
+
+        
+    
 
 }

@@ -371,9 +371,7 @@ h5{
     flex-direction: column;
     align-items: center;
 }
-#updateTrainingsModal{
-    display: flex;
-}
+
 
 #updateTrainingsModal .modal{
     display: flex;

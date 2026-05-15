@@ -134,7 +134,7 @@
 
         <div class="table-container">
                     <div class="toolBar" id="activeToolBar" style="display: flex; opacity: 1;">
-                    <div id="updateTrainingsButton">Update</div>
+                    <div id="openUpdateButton">Update</div>
                 <div class="count"></div>
             </div>
             <table id="complianceSectionTable">
@@ -146,7 +146,7 @@
         </div>
 
 
-        <div id="updateTrainingsModal" class="modalContainer" style="display: flex;">
+        <div id="updateTrainingsModal" class="modalContainer">
             <div  class="modal">
                 <div class="modalContent" >
                     <h1>Update Training</h1>
@@ -195,8 +195,12 @@
                   
                     </div>
 
-                
-<button class="light-button" id="updateTrainingButton">Update</button>
+         
+                    <div style="display: flex;gap: 50px; " id="changeTraining">
+                        <button class="light-button changeTrainingButton" id="updateTrainingButton">Update</button>
+<button class="dangerBtn changeTrainingButton" id="clearTrainingButton">Clear</button>
+                    </div>
+
                 </div>
 
                 
